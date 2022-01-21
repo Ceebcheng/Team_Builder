@@ -7,7 +7,7 @@ const generateHTML = require('./Develop/src/page-template')
 
 const squad = [];
 
-const managerQestions = () => {
+const managerQuestions = () => {
     return inquirer.prompt([
         {
             type: "input",
@@ -29,27 +29,120 @@ const managerQestions = () => {
             message: "What is your Team Manager's Office number?",
             name: "managerNumber"
         },
-    
+
     ])
 
-.then((answers) => {
-    console.log(answers);
-    const managerObject = new Manager(answers.managerName, answers.managerID, answers.managerEmail, answers.managerNumber);
-    // squad.push(managerObject);
-    console.log(managerObject);
+        .then((answers) => {
 
-   
-    fs.writeFile('test.html', generateHTML([managerObject]), (err) => {
+            const managerObject = new Manager(answers.managerName, answers.managerID, answers.managerEmail, answers.managerNumber);
+            squad.push(managerObject);
+            promptMenu();
+        })     
+}
+
+const promptMenu = () => {
+    return inquirer.prompt([
+        {
+            type: "list",
+            message: "Would you like to add a Engineer or Intern to your team? or finish building your team?",
+            name: "listofOptions",
+            choices: ["Engineer", "Intern", "finish building my team"]
+        }
+    ])
+
+    .then(userChoice => {
+        switch (userChoice.listofOptions) {
+            case "Engineer":
+                engineerQuestions();
+                break;
+            case "Intern":
+                internQuestions();
+                break;
+            default: writeFile();
+        }
+    });
+};
+
+const engineerQuestions = () => {
+    return inquirer.prompt([
+        {
+            type: "input",
+            message: "What is your Engineer's name?",
+            name: "engineerName"
+        },
+        {
+            type: "input",
+            message: "What is your Engineer's employee ID?",
+            name: "engineerID"
+        },
+        {
+            type: "input",
+            message: "What is your Engineer's Email?",
+            name: "engineerEmail"
+        },
+        {
+            type: "input",
+            message: "What is your Engineer's GitHub Username?",
+            name: "engineergHub"
+        },
+
+    ])
+
+        .then((answers) => {
+
+            const engineerObject = new Engineer(answers.engineerName, answers.engineerID, answers.engineerEmail, answers.engineergHub);
+            squad.push(engineerObject);
+            promptMenu();
+        })     
+}
+
+const internQuestions = () => {
+    return inquirer.prompt([
+        {
+            type: "input",
+            message: "What is your intern's name?",
+            name: "internName"
+        },
+        {
+            type: "input",
+            message: "What is your intern's employee ID?",
+            name: "internID"
+        },
+        {
+            type: "input",
+            message: "What is your intern's Email?",
+            name: "internEmail"
+        },
+        {
+            type: "input",
+            message: "What is your intern's school?",
+            name: "internSchool"
+        },
+
+    ])
+
+        .then((answers) => {
+
+            const internObject = new Intern(answers.internName, answers.internID, answers.internEmail, answers.internSchool);
+            squad.push(internObject);
+            promptMenu();
+        })     
+}
+
+
+function writeFile() {
+    fs.writeFile('test.html', generateHTML(squad), (err) => {
         if (err) {
             console.log(err);
         }
         console.log("Successfully created HTML");
     })
-})
-.catch(err => {
-    console.log(err);
-})
-
 }
 
-managerQestions();
+// .catch(err => {
+//     console.log(err);
+// })
+
+// }
+
+managerQuestions();
