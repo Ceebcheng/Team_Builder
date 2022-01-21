@@ -7,7 +7,7 @@ const generateHTML = require('./Develop/src/page-template')
 
 const squad = [];
 
-const buildTeam = () => {
+const managerQestions = () => {
     return inquirer.prompt([
         {
             type: "input",
@@ -35,11 +35,11 @@ const buildTeam = () => {
 .then((answers) => {
     console.log(answers);
     const managerObject = new Manager(answers.managerName, answers.managerID, answers.managerEmail, answers.managerNumber);
-    squad.push(managerObject);
+    // squad.push(managerObject);
     console.log(managerObject);
-    
+
    
-    fs.writeFile('test.html', managerObject, (err) => {
+    fs.writeFile('test.html', generateHTML([managerObject]), (err) => {
         if (err) {
             console.log(err);
         }
@@ -52,4 +52,4 @@ const buildTeam = () => {
 
 }
 
-buildTeam();
+managerQestions();
